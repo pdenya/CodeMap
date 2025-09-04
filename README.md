@@ -11,6 +11,12 @@ This repository contains two main tools:
 
 Both tools are Git-aware and respect `.gitignore` rules, making them ideal for analyzing real-world projects.
 
+## Why
+
+Modern approaches to working with large codebases lean on RAG or embeddings search. Those solutions can feel heavy, opaque, and hard to tweak. You don’t always know exactly what’s being pulled into your prompts or how to update/remove pieces. 
+
+CodeMap is designed as a lightweight, transparent alternative. It creates explicit, human-readable maps of your code so both you and your AI coding assistants know what’s in scope. You can see and edit the outlines directly and remove them just as easily. 
+
 ## Example Usage
 
 <img width="712" height="702" alt="image" src="https://github.com/user-attachments/assets/d2f59b69-4194-4d4a-9a71-cc6ac7e1e0b5" />
