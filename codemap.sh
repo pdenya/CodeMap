@@ -60,7 +60,7 @@ check_global_gitignore() {
     echo "⚠️  Notice: .codemap is not in your global gitignore."
     
     if [[ $has_global_gitignore -eq 1 ]]; then
-      echo "   Add it with: echo '.codemap' >> $global_gitignore"
+      echo "   Add it with: echo -e '\\n.codemap' >> $global_gitignore"
     else
       echo "   No global gitignore found. Set one up with:"
       echo "     git config --global core.excludesfile ~/.gitignore"
