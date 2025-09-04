@@ -1,4 +1,4 @@
-# FlattenRepo
+# CodeMap
 
 A collection of bash scripts for analyzing and extracting high-signal code patterns from codebases. These tools help developers quickly understand project structure, identify key functions, and create navigable code summaries.
 
@@ -16,8 +16,8 @@ Both tools are Git-aware and respect `.gitignore` rules, making them ideal for a
 Clone this repository and make the scripts executable:
 
 ```bash
-git clone https://github.com/yourusername/FlattenRepo.git
-cd FlattenRepo
+git clone https://github.com/pdenya/CodeMap.git
+cd CodeMap
 chmod +x codemap.sh flatten.sh
 ```
 
@@ -33,12 +33,14 @@ Generates structured code maps that extract function definitions and meaningful 
 
 # Analyze specific directory
 ./codemap.sh -i /path/to/project
-
-# Custom output location
-./codemap.sh -i /path/to/project -o /custom/output/dir
+# outputs to /path/to/project/.codemap
 
 # Adjust signal thresholds
 ./codemap.sh -s 30 -f 5  # Require 30+ signal lines and 5+ files per directory
+
+# Easy uninstall
+
+rm -Rf /path/to/project/.codemap
 ```
 
 **Options:**
