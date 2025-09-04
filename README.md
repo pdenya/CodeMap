@@ -11,6 +11,63 @@ This repository contains two main tools:
 
 Both tools are Git-aware and respect `.gitignore` rules, making them ideal for analyzing real-world projects.
 
+## Example Usage
+
+<img width="712" height="702" alt="image" src="https://github.com/user-attachments/assets/d2f59b69-4194-4d4a-9a71-cc6ac7e1e0b5" />
+
+### Files created by example usage
+
+<img width="425" height="343" alt="image" src="https://github.com/user-attachments/assets/d013c165-69f6-4739-bb38-ee590667af34" />
+
+### Example file contents
+
+.codemap/app/services/codemap.md contains
+
+```markdown
+    # CODEMAP: app/services
+    
+    ## app/services/admin_stats_service.rb
+    
+    ```ruby
+    # frozen_string_literal: true
+      def self.dashboard_stats
+      def self.message_stats
+      def self.queue_stats
+        # Basic queue stats without the expensive hourly calculations
+        # Queue depth by queue name
+        # Get oldest pending job
+        # Last hour stats - now using completed_jobs table
+        # Calculate average execution time for completed jobs
+      def self.llm_stats
+    ```
+    
+    ## app/services/byline_parser_service.rb
+    
+    ```ruby
+      def initialize(api_key = nil)
+      def parse_byline(byline_text)
+        # Cache result to avoid duplicate API calls
+        # Cache for 30 days
+      def parse_batch(bylines)
+        # Process multiple bylines in one API call for efficiency
+      def call_openai(byline_text)
+      def build_single_prompt(byline_text)
+      def build_batch_prompt(bylines)
+      def make_api_request(body)
+      def parse_response(response)
+      def parse_batch_response(response)
+      def valid_name?(name)
+      def fallback_parse(byline_text)
+        # Simple regex-based fallback
+        # Clean the byline
+        # Split on common separators
+          # Check if it's an organization
+            # Simple name pattern
+    ```
+
+    [...500 more lines]
+```
+
 ## Installation
 
 Clone this repository and make the scripts executable:
