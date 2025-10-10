@@ -4,7 +4,7 @@ set -euo pipefail
 # Defaults
 input="."
 outdir=""          # will be set to input/.codemap after processing args
-min_signal=20      # minimum lines matched (functions + meaningful comments) to consider "high-signal"
+min_signal=20      # minimum lines matched (functions and classes) to consider "high-signal"
 min_files=3        # also require at least this many source files in the dir
 show_progress=1
 
@@ -73,10 +73,10 @@ check_global_gitignore() {
 # Run the gitignore check
 check_global_gitignore
 
-# --- Patterns: require alphabetic characters in comment lines ---
-RUBY_PAT='^[[:space:]]*#[[:space:]]*.*[[:alpha:]]|^[[:space:]]*def[[:space:]]'
-JS_TS_JSX_PAT='^[[:space:]]*(//|/\*|\*|\*/)[[:space:]]*.*[[:alpha:]]|^[[:space:]]*(export[[:space:]]+)?function[[:space:]]|^[[:space:]]*(export[[:space:]]+)?(const|let|var)[[:space:]]+[A-Za-z_$][A-Za-z0-9_$]*[[:space:]]*=[[:space:]]*(async[[:space:]]*)?\([^)]*\)[[:space:]]*=>'
-PHP_PAT='^[[:space:]]*(//|#|/\*|\*|\*/)[[:space:]]*.*[[:alpha:]]|^[[:space:]]*(public|protected|private|static[[:space:]]+)*function[[:space:]]'
+# --- Patterns: class names and function names only ---
+RUBY_PAT='^[[:space:]]*def[[:space:]]|^[[:space:]]*class[[:space:]]'
+JS_TS_JSX_PAT='^[[:space:]]*(export[[:space:]]+)?function[[:space:]]|^[[:space:]]*(export[[:space:]]+)?(const|let|var)[[:space:]]+[A-Za-z_$][A-Za-z0-9_$]*[[:space:]]*=[[:space:]]*(async[[:space:]]*)?\([^)]*\)[[:space:]]*=>|^[[:space:]]*(export[[:space:]]+)?(class|interface|type)[[:space:]]'
+PHP_PAT='^[[:space:]]*(public|protected|private|static[[:space:]]+)*(static[[:space:]]+)*(public|protected|private|static[[:space:]]+)*function[[:space:]]|^[[:space:]]*(abstract[[:space:]]+)?(final[[:space:]]+)?class[[:space:]]'
 
 # Extensions we care about
 LANG_EXTS_REGEX='(rb|js|jsx|ts|tsx|php|phtml)$'
@@ -217,7 +217,7 @@ emit_codemap_for_dir() {
           printf '```\n'
         fi
         # actual lines
-        grep -E "$pat" "$input/$rel" || true
+        grep -n -E "$pat" "$input/$rel" || true
         printf '```\n\n'
       fi
     done < <(discover_source_files)
