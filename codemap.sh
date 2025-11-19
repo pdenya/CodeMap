@@ -75,11 +75,11 @@ check_global_gitignore
 
 # --- Patterns: class names and function names only ---
 RUBY_PAT='^[[:space:]]*def[[:space:]]|^[[:space:]]*class[[:space:]]'
-JS_TS_JSX_PAT='^[[:space:]]*(export[[:space:]]+)?function[[:space:]]|^[[:space:]]*(export[[:space:]]+)?(const|let|var)[[:space:]]+[A-Za-z_$][A-Za-z0-9_$]*[[:space:]]*=[[:space:]]*(async[[:space:]]*)?\([^)]*\)[[:space:]]*=>|^[[:space:]]*(export[[:space:]]+)?(class|interface|type)[[:space:]]'
+JS_TS_JSX_PAT='^[[:space:]]*(export[[:space:]]+)?((async|default)[[:space:]]+)*function[[:space:]]|^[[:space:]]*(export[[:space:]]+)?(const|let|var)[[:space:]]+[A-Za-z_$][A-Za-z0-9_$]*[[:space:]]*=[[:space:]]*((async[[:space:]]+)?function|\([^)]*\)[[:space:]]*=>)|^[[:space:]]*(export[[:space:]]+)?((abstract|declare|default)[[:space:]]+)?(class|interface|type|enum|namespace|module)[[:space:]]|^[[:space:]]*(public|private|protected|static|readonly|abstract|async|override)[[:space:]]+([A-Za-z_$][A-Za-z0-9_$]*|[*])[[:space:]]*\('
 PHP_PAT='^[[:space:]]*(public|protected|private|static[[:space:]]+)*(static[[:space:]]+)*(public|protected|private|static[[:space:]]+)*function[[:space:]]|^[[:space:]]*(abstract[[:space:]]+)?(final[[:space:]]+)?class[[:space:]]'
 
 # Extensions we care about
-LANG_EXTS_REGEX='(rb|js|jsx|ts|tsx|php|phtml)$'
+LANG_EXTS_REGEX='(rb|js|jsx|ts|tsx|mjs|cjs|mts|cts|d\.ts|php|phtml)$'
 
 # --- Utilities ---
 progress() {
