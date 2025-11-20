@@ -1,15 +1,16 @@
 # CodeMap
 
-Generate a .codemap folder in your repo so Claude Code and Codex can get the lay of the land faster and with less token usage. 
+Generate a .codemap folder in your repo so Claude Code and Codex can get the lay of the land faster and with less token usage.
 
 ## Overview
 
-This repository contains two main tools:
+This repository contains three main tools:
 
-- **`codemap.sh`** - Generates hierarchical code maps showing functions and meaningful comments
+- **`codemap` (Node.js/npx)** - Modern tree-sitter based code map generator with AST parsing
+- **`codemap.sh`** - Original bash script using regex patterns (still maintained)
 - **`flatten.sh`** - Creates a flattened outline of an entire codebase with code signatures
 
-Both tools are Git-aware and respect `.gitignore` rules, making them ideal for analyzing real-world projects.
+All tools are Git-aware and respect `.gitignore` rules, making them ideal for analyzing real-world projects.
 
 ## Why
 
@@ -76,7 +77,22 @@ CodeMap is designed as a lightweight, transparent alternative. It creates explic
 
 ## Installation
 
-Clone this repository and make the scripts executable:
+### Option 1: npx (Recommended)
+
+Use the modern Node.js version without installation:
+
+```bash
+npx @pdenya/codemap -i /path/to/project
+```
+
+### Option 2: Install Globally
+
+```bash
+npm install -g @pdenya/codemap
+codemap -i /path/to/project
+```
+
+### Option 3: Clone Repository (Bash Scripts)
 
 ```bash
 git clone https://github.com/pdenya/CodeMap.git
@@ -86,7 +102,43 @@ chmod +x codemap.sh flatten.sh
 
 ## Usage
 
-### codemap.sh
+### codemap (Node.js - Recommended)
+
+Modern tree-sitter based code map generator with accurate AST parsing. Generates structured code maps that extract function definitions, classes, and interfaces from your codebase.
+
+```bash
+# Basic usage with npx
+npx @pdenya/codemap
+
+# Analyze specific directory
+npx @pdenya/codemap -i /path/to/project
+
+# Adjust signal thresholds
+npx @pdenya/codemap -s 30 -f 5  # Require 30+ signal lines and 5+ files per directory
+
+# Custom output directory
+npx @pdenya/codemap -i ./src -o ./docs/codemap
+```
+
+**Why Use the Node.js Version:**
+- ✅ **Accurate parsing** - Uses tree-sitter AST parsing instead of regex
+- ✅ **Cross-platform** - Works on Windows, macOS, Linux
+- ✅ **Easy language support** - Adding new languages is trivial
+- ✅ **No false positives** - Ignores comments and strings containing code-like patterns
+- ✅ **Type-safe** - Built with TypeScript for reliability
+
+**Output:**
+- Hierarchical codemaps in `.codemap/` directory (by directory)
+- Single `outline.md` file with entire codebase flattened by language
+
+**Options:**
+- `-i, --input <dir>` - Input directory to analyze (default: current directory)
+- `-o, --output <dir>` - Output directory for codemaps (default: `<input>/.codemap`)
+- `-s, --min-signal <num>` - Minimum signal lines (functions/classes) to consider high-signal (default: 20)
+- `-f, --min-files <num>` - Minimum number of source files required in directory (default: 3)
+- `-p, --progress <1|0>` - Show/hide progress indicator (default: 1)
+
+### codemap.sh (Legacy Bash Script)
 
 Generates structured code maps that extract function definitions and meaningful comments from your codebase. Creates a `.codemap` directory with markdown files organized by directory structure.
 
@@ -113,7 +165,19 @@ rm -Rf /path/to/project/.codemap
 - `-f <num>` - Minimum number of source files required in directory (default: 3)
 - `-p <0|1>` - Show/hide progress indicator (default: 1)
 
-**Output Structure:**
+**Output Structure (Node.js):**
+```
+project/
+└── .codemap/
+    ├── outline.md           # Complete flattened view (entire codebase)
+    ├── codemap.md           # Root level functions
+    ├── app/
+    │   └── codemap.md       # app/ directory functions
+    └── app/services/
+        └── codemap.md       # app/services/ functions
+```
+
+**Output Structure (Bash):**
 ```
 project/
 └── .codemap/
@@ -124,9 +188,11 @@ project/
         └── codemap.md       # app/services/ functions
 ```
 
-### flatten.sh
+### flatten.sh (Legacy - Use Node.js version instead)
 
-Creates a single markdown file containing an outline of your entire codebase, including configuration files and code signatures from all supported languages.
+**Note:** The Node.js `codemap` command now automatically generates `outline.md` alongside the hierarchical codemaps. You don't need to run flatten.sh separately anymore!
+
+If you still prefer the standalone bash version:
 
 ```bash
 # Basic usage - output to outline.md
@@ -150,43 +216,59 @@ Creates a single markdown file containing an outline of your entire codebase, in
 
 ## Supported Languages
 
-Both tools support:
-- **Ruby** (`.rb`) - Functions (`def`) and comments
-- **JavaScript** (`.js`, `.mjs`, `.cjs`) - Functions, arrow functions, comments
-- **React/JSX** (`.jsx`) - Components and functions
-- **TypeScript** (`.ts`, `.mts`, `.cts`) - Type-aware function extraction
-- **TSX** (`.tsx`) - React + TypeScript components
-- **PHP** (`.php`, `.phtml`) - Methods and functions with visibility modifiers
+All tools support:
+- **Ruby** (`.rb`) - Classes, methods, modules
+- **JavaScript** (`.js`, `.jsx`, `.mjs`, `.cjs`) - Functions, classes, methods
+- **TypeScript** (`.ts`, `.tsx`, `.mts`, `.cts`) - All JS features plus interfaces, types, enums
+- **PHP** (`.php`, `.phtml`) - Classes, methods, functions, traits
+
+**Adding more languages** to the Node.js version is simple - just install the tree-sitter grammar and add a 10-line parser class!
 
 ## Features
 
-### Smart Pattern Recognition
+### Modern Tree-sitter Parsing (Node.js version)
 
-Both tools use sophisticated regex patterns to identify:
+Uses Abstract Syntax Tree (AST) parsing for accurate code analysis:
+- Zero false positives from comments or strings
+- Understands code structure natively
+- Extensible to any language with a tree-sitter grammar
+- Battle-tested parsing used by VS Code and GitHub
+
+### Legacy Regex Patterns (Bash version)
+
+Uses sophisticated regex patterns to identify:
 - Function/method definitions (including arrow functions, async functions, exported functions)
 - Meaningful comments (filters out noise by requiring alphabetic content)
 - Class methods with visibility modifiers (public, private, protected, static)
 
-### Git Integration
+### Git Integration (All Tools)
 
 - Respects `.gitignore` rules automatically
 - Uses `git ls-files` when in a Git repository
-- Falls back to `find` for non-Git directories
-- Warns if `.codemap` is not in global gitignore
+- Falls back to recursive find for non-Git directories
+- Filters common directories (node_modules, vendor, dist, etc.)
 
 ### Performance
 
+**Node.js version:**
+- Fast parallel directory processing
+- Tree-sitter parsing: ~3-5 seconds for 671 files
+- Handles large codebases efficiently
+
+**Bash version:**
 - Progress indicators show real-time analysis status
 - Efficient grep-based extraction
-- Handles large codebases with thousands of files
-- Depth-limited directory analysis (max depth 2 for codemap.sh)
+- Depth-limited directory analysis (max depth 2)
 
 ## Examples
 
 ### Analyzing a Node.js Project
 
 ```bash
-# Generate codemaps for a React app
+# Using modern Node.js version
+npx @pdenya/codemap -i ~/projects/my-react-app
+
+# Using legacy bash version
 ./codemap.sh -i ~/projects/my-react-app
 
 # Create a full outline
@@ -196,11 +278,24 @@ Both tools use sophisticated regex patterns to identify:
 ### Analyzing a Ruby on Rails Project
 
 ```bash
-# Focus on high-signal directories (many functions)
+# Using modern Node.js version with custom thresholds
+npx @pdenya/codemap -i ~/rails-app -s 50 -f 10
+
+# Using legacy bash version
 ./codemap.sh -i ~/rails-app -s 50 -f 10
 
 # Get complete project overview
 ./flatten.sh -i ~/rails-app -o rails-overview.md
+```
+
+### Quick Analysis
+
+```bash
+# Analyze current directory (modern)
+npx @pdenya/codemap
+
+# Lower thresholds for smaller projects
+npx @pdenya/codemap -s 10 -f 2
 ```
 
 ## Best Practices
@@ -216,11 +311,15 @@ Both tools use sophisticated regex patterns to identify:
    - Medium projects: `-s 20 -f 3` (default)
    - Large projects: `-s 50 -f 10`
 
-3. **Use `flatten.sh` for initial exploration**, then `codemap.sh` for detailed analysis
+3. **Use `flatten.sh` for initial exploration**, then `codemap` (Node.js) or `codemap.sh` for detailed analysis
+
+4. **Use the Node.js version for new projects** - better accuracy and cross-platform support
 
 ## Output Format
 
-### Codemap Format (codemap.sh)
+Both the Node.js and bash versions produce identical markdown output:
+
+### Codemap Format
 
 ```markdown
 # CODEMAP: app/controllers
@@ -274,10 +373,48 @@ const generateHash = (input) => {
 ## Contributing
 
 Contributions are welcome! Feel free to:
-- Add support for more languages
-- Improve pattern recognition
+- **Add new languages** to the Node.js version (just add a parser class!)
+- Improve tree-sitter queries for better symbol extraction
 - Optimize performance
 - Add new features
+- Improve documentation
+
+### Adding a New Language (Node.js version)
+
+1. Install the tree-sitter grammar: `npm install tree-sitter-<language>`
+2. Create `src/parsers/<Language>Parser.ts`:
+```typescript
+import { LanguageParser } from './LanguageParser';
+import Language from 'tree-sitter-<language>';
+
+export class LanguageParser extends LanguageParser {
+  constructor() {
+    super();
+    this.language = Language;
+    this.parser.setLanguage(Language);
+  }
+
+  getLanguageFence(): string {
+    return '<language>';
+  }
+
+  protected getQueryString(): string {
+    return `
+      (function_declaration
+        name: (identifier) @function.name)
+
+      (class_declaration
+        name: (identifier) @class.name)
+    `;
+  }
+
+  extractSymbols(sourceCode: string, filePath: string): Symbol[] {
+    return this.executeQuery(sourceCode);
+  }
+}
+```
+3. Register in `ParserRegistry.ts`
+4. Done!
 
 ## License
 
