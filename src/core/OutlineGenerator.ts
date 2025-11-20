@@ -30,20 +30,15 @@ export class OutlineGenerator {
   /**
    * Generate complete outline file
    */
-  async generateOutline(allSourceFiles: string[]): Promise<void> {
+  async generateOutline(allSourceFiles: string[], codemapFiles: string[]): Promise<void> {
     let markdown = '';
 
     // 1. Config files section
     markdown += await this.generateConfigSection();
     markdown += '\n';
 
-    // 2. Language sections
-    markdown += await this.generateLanguageSection('Ruby', ['rb'], allSourceFiles);
-    markdown += await this.generateLanguageSection('JavaScript', ['js', 'mjs', 'cjs'], allSourceFiles);
-    markdown += await this.generateLanguageSection('React (JSX)', ['jsx'], allSourceFiles);
-    markdown += await this.generateLanguageSection('TypeScript', ['ts', 'mts', 'cts'], allSourceFiles);
-    markdown += await this.generateLanguageSection('TSX', ['tsx'], allSourceFiles);
-    markdown += await this.generateLanguageSection('PHP', ['php', 'phtml'], allSourceFiles);
+    // 2. Codemap files section
+    markdown += await this.generateCodemapSection(codemapFiles);
 
     // Write output
     await fs.mkdir(path.dirname(this.outputPath), { recursive: true });
@@ -101,59 +96,40 @@ export class OutlineGenerator {
   }
 
   /**
-   * Generate a language section
+   * Generate codemap files section
    */
-  private async generateLanguageSection(
-    label: string,
-    extensions: string[],
-    allSourceFiles: string[]
-  ): Promise<string> {
-    // Filter files for this language
-    const languageFiles = allSourceFiles.filter(file => {
-      const ext = path.extname(file).slice(1);
-      return extensions.includes(ext);
-    });
-
-    if (languageFiles.length === 0) {
+  private async generateCodemapSection(codemapFiles: string[]): Promise<string> {
+    if (codemapFiles.length === 0) {
       return '';
     }
 
-    let markdown = `# ${label}\n\n`;
+    let markdown = '# Codemaps\n\n';
 
-    // Process each file
-    for (const file of languageFiles) {
-      const ext = path.extname(file).slice(1);
-      const parser = this.parserRegistry.getParser(ext);
+    // Get the .codemap directory path
+    const codemapDir = path.dirname(this.outputPath);
 
-      if (!parser) {
-        continue;
-      }
-
-      const filePath = path.join(this.inputDir, file);
-
+    // Sort files and count lines
+    const filesWithLines: FileWithLines[] = [];
+    for (const file of codemapFiles) {
+      const fullPath = path.join(codemapDir, file);
       try {
-        const content = await fs.readFile(filePath, 'utf-8');
-        const symbols = parser.extractSymbols(content, filePath);
-
-        // Always include file header even if no symbols
-        markdown += `## ${file}\n\n`;
-
-        if (symbols.length > 0) {
-          markdown += `\`\`\`${parser.getLanguageFence()}\n`;
-
-          for (const symbol of symbols) {
-            markdown += `${symbol.line}:${symbol.text}\n`;
-          }
-
-          markdown += `\`\`\`\n\n`;
-        }
+        const content = await fs.readFile(fullPath, 'utf-8');
+        const lines = content.split('\n').length;
+        filesWithLines.push({ path: file, lines });
       } catch (error) {
         // Skip files we can't read
-        console.error(`Error processing ${filePath}: ${error}`);
       }
     }
 
-    return markdown;
+    // Sort by path
+    filesWithLines.sort((a, b) => a.path.localeCompare(b.path));
+
+    // Output in same format as config section with ./ prefix
+    for (const file of filesWithLines) {
+      markdown += `./${file.path} (${file.lines} lines)\n`;
+    }
+
+    return markdown + '\n';
   }
 
   /**

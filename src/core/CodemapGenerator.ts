@@ -105,13 +105,24 @@ export class CodemapGenerator {
 
   /**
    * Generate codemaps for multiple directories
+   * Returns array of relative paths to generated codemap files
    */
   async generateCodemaps(
     directories: string[],
     allSourceFiles: string[]
-  ): Promise<void> {
+  ): Promise<string[]> {
+    const codemapFiles: string[] = [];
+
     for (const directory of directories) {
       await this.generateCodemapForDirectory(directory, allSourceFiles);
+
+      // Add the relative path to the codemap file
+      const codemapPath = directory
+        ? path.join(directory, 'codemap.md')
+        : 'codemap.md';
+      codemapFiles.push(codemapPath);
     }
+
+    return codemapFiles;
   }
 }

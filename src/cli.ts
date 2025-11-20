@@ -131,7 +131,7 @@ async function main() {
       console.log(`\nGenerating codemaps for ${highSignalDirs.length} directories...`);
     }
 
-    await codemapGenerator.generateCodemaps(highSignalDirs, sourceFiles);
+    const codemapFiles = await codemapGenerator.generateCodemaps(highSignalDirs, sourceFiles);
 
     // 5. Generate outline
     if (showProgress) {
@@ -143,7 +143,7 @@ async function main() {
       outputPath: path.join(outputDir, 'outline.md')
     });
 
-    await outlineGenerator.generateOutline(sourceFiles);
+    await outlineGenerator.generateOutline(sourceFiles, codemapFiles);
 
     console.log(`\nCodemaps written under: ${outputDir}`);
     console.log(`Outline written to: ${path.join(outputDir, 'outline.md')}`);
