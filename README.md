@@ -92,7 +92,15 @@ npm install -g @pdenya/codemap
 codemap -i /path/to/project
 ```
 
-### Option 3: Clone Repository (Bash Scripts)
+### Option 3: Run Directly from GitHub (Mac/Linux)
+
+Copy and paste this command in your git repo folder:
+
+```bash
+npx github:pdenya/CodeMap
+```
+
+### Option 4: Clone Repository (Bash Scripts)
 
 ```bash
 git clone https://github.com/pdenya/CodeMap.git
