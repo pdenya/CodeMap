@@ -18,6 +18,14 @@ Modern approaches to working with large codebases lean on RAG or embeddings sear
 
 CodeMap is designed as a lightweight, transparent alternative. It creates explicit, human-readable maps of your code so both you and your AI coding assistants know what’s in scope. You can see and edit the outlines directly and remove them just as easily. 
 
+## Quick Start
+
+Copy and paste this command in your git repo folder:
+
+```bash
+npx -y github:pdenya/CodeMap
+```
+
 ## Example Usage
 
 <img width="712" height="702" alt="image" src="https://github.com/user-attachments/assets/d2f59b69-4194-4d4a-9a71-cc6ac7e1e0b5" />
@@ -94,10 +102,8 @@ codemap -i /path/to/project
 
 ### Option 3: Run Directly from GitHub (Mac/Linux)
 
-Copy and paste this command in your git repo folder:
-
 ```bash
-npx github:pdenya/CodeMap
+npx -y github:pdenya/CodeMap
 ```
 
 ### Option 4: Clone Repository (Bash Scripts)
