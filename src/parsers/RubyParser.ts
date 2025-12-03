@@ -32,6 +32,6 @@ export class RubyParser extends LanguageParser {
   }
 
   extractSymbols(sourceCode: string, filePath: string): Symbol[] {
-    return this.executeQuery(sourceCode);
+    return this.executeQuery(sourceCode, filePath);
   }
 }

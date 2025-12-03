@@ -39,7 +39,7 @@ export abstract class LanguageParser {
   /**
    * Execute a tree-sitter query and extract symbols
    */
-  protected executeQuery(sourceCode: string): Symbol[] {
+  protected executeQuery(sourceCode: string, filePath?: string): Symbol[] {
     try {
       const tree = this.parser.parse(sourceCode);
       const query = new Parser.Query(this.language, this.getQueryString());
@@ -82,7 +82,9 @@ export abstract class LanguageParser {
       // Sort by line number and deduplicate
       return this.deduplicateSymbols(symbols);
     } catch (error) {
-      console.error(`Error parsing file: ${error}`);
+      if (filePath) {
+        console.error(`Error parsing ${filePath}: ${error instanceof Error ? error.message : error}`);
+      }
       return [];
     }
   }

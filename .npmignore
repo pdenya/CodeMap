@@ -1,0 +1,29 @@
+# Source files (dist/ is published)
+src/
+tsconfig.json
+
+# Development files
+.git/
+.gitignore
+.codemap/
+.claude/
+
+# Scripts
+*.sh
+
+# Example files
+*.example.md
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+
+# Environment
+.env
+.env.local
+
+# Node
+node_modules/
