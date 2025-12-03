@@ -41,7 +41,15 @@ export abstract class LanguageParser {
    */
   protected executeQuery(sourceCode: string, filePath?: string): Symbol[] {
     try {
-      const tree = this.parser.parse(sourceCode);
+      // Use callback-based parsing for large files (>32KB) to avoid buffer limit
+      let tree;
+      if (sourceCode.length > 32000) {
+        tree = this.parser.parse((startIndex: number) => {
+          return sourceCode.substring(startIndex, Math.min(startIndex + 10000, sourceCode.length));
+        }, undefined);
+      } else {
+        tree = this.parser.parse(sourceCode);
+      }
       const query = new Parser.Query(this.language, this.getQueryString());
       const matches = query.matches(tree.rootNode);
 
