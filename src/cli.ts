@@ -145,10 +145,15 @@ async function main() {
 
     await outlineGenerator.generateOutline(sourceFiles, codemapFiles);
 
-    console.log(`\nCodemaps written under: ${outputDir}`);
-    console.log(`Outline written to: ${path.join(outputDir, 'outline.md')}`);
+    // 6. Print summary of created files
+    console.log('\n--- Files Created ---');
+    console.log(`${path.join(outputDir, 'outline.md')}`);
+    for (const codemapFile of codemapFiles) {
+      console.log(`${path.join(outputDir, codemapFile)}`);
+    }
+    console.log('---------------------');
 
-    // 6. Check for CLAUDE.md
+    // 7. Check for CLAUDE.md
     checkClaudeMarkdown(inputDir, outputDir);
 
   } catch (error) {
