@@ -7,6 +7,8 @@ import { PythonParser } from './PythonParser';
 import { GoParser } from './GoParser';
 import { JavaParser } from './JavaParser';
 import { RustParser } from './RustParser';
+import { SwiftParser } from './SwiftParser';
+import { ObjectiveCParser } from './ObjectiveCParser';
 
 /**
  * Registry for language parsers
@@ -30,6 +32,8 @@ export class ParserRegistry {
     const goParser = new GoParser();
     const javaParser = new JavaParser();
     const rustParser = new RustParser();
+    const swiftParser = new SwiftParser();
+    const objcParser = new ObjectiveCParser();
 
     // Ruby
     this.parsers.set('rb', rubyParser);
@@ -62,6 +66,14 @@ export class ParserRegistry {
 
     // Rust
     this.parsers.set('rs', rustParser);
+
+    // Swift
+    this.parsers.set('swift', swiftParser);
+
+    // Objective-C
+    this.parsers.set('m', objcParser);
+    this.parsers.set('mm', objcParser);
+    this.parsers.set('h', objcParser);
   }
 
   /**
