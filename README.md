@@ -235,6 +235,13 @@ All tools support:
 - **JavaScript** (`.js`, `.jsx`, `.mjs`, `.cjs`) - Functions, classes, methods
 - **TypeScript** (`.ts`, `.tsx`, `.mts`, `.cts`) - All JS features plus interfaces, types, enums
 - **PHP** (`.php`, `.phtml`) - Classes, methods, functions, traits
+- **Python** (`.py`, `.pyw`) - Classes, methods, functions
+- **Go** (`.go`) - Functions, methods, types
+- **Java** (`.java`) - Classes, methods, interfaces
+- **Rust** (`.rs`) - Functions, structs, traits, implementations
+- **Swift** (`.swift`) - Classes, structs, protocols, functions
+- **Objective-C** (`.m`, `.mm`, `.h`) - Classes, methods, interfaces
+- **C++** (`.cpp`, `.cc`, `.cxx`, `.hpp`, `.hxx`, `.hh`) - Functions, classes, namespaces, templates, structs
 
 **Adding more languages** to the Node.js version is simple - just install the tree-sitter grammar and add a 10-line parser class!
 
