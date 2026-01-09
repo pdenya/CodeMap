@@ -9,6 +9,7 @@ import { JavaParser } from './JavaParser';
 import { RustParser } from './RustParser';
 import { SwiftParser } from './SwiftParser';
 import { ObjectiveCParser } from './ObjectiveCParser';
+import { CppParser } from './CppParser';
 
 /**
  * Registry for language parsers
