@@ -35,6 +35,7 @@ export class ParserRegistry {
     const rustParser = new RustParser();
     const swiftParser = new SwiftParser();
     const objcParser = new ObjectiveCParser();
+    const cppParser = new CppParser();
 
     // Ruby
     this.parsers.set('rb', rubyParser);
