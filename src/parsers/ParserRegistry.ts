@@ -76,6 +76,14 @@ export class ParserRegistry {
     this.parsers.set('m', objcParser);
     this.parsers.set('mm', objcParser);
     this.parsers.set('h', objcParser);
+
+    // C++
+    this.parsers.set('cpp', cppParser);
+    this.parsers.set('cc', cppParser);
+    this.parsers.set('cxx', cppParser);
+    this.parsers.set('hpp', cppParser);
+    this.parsers.set('hxx', cppParser);
+    this.parsers.set('hh', cppParser);
   }
 
   /**
